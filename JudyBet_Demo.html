@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JudyBet - Professional Demo</title>
+<style>
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#0f172a,#020617);color:white}
+header{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:#0b1220;box-shadow:0 4px 20px rgba(0,0,0,0.5)}
+.logo{font-size:24px;font-weight:bold;color:#3b82f6}
+.nav-buttons button{margin-left:10px}
+button{padding:10px 15px;border:none;border-radius:8px;background:#2563eb;color:white;cursor:pointer;font-weight:bold}
+button:hover{background:#1d4ed8}
+.container{padding:30px;max-width:1000px;margin:auto}
+.card{background:#111827;padding:20px;border-radius:15px;margin-bottom:20px;box-shadow:0 4px 15px rgba(0,0,0,0.4)}
+.odds{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px}
+input{padding:10px;border-radius:8px;border:none;margin:5px 0;width:100%}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);justify-content:center;align-items:center}
+.modal-content{background:#0f172a;padding:20px;border-radius:15px;width:320px;box-shadow:0 4px 20px rgba(0,0,0,0.6)}
+.footer{text-align:center;color:gray;margin-top:40px;font-size:14px}
+.balance{font-size:22px;margin-top:10px;color:#22c55e}
+h2{border-bottom:1px solid #1f2937;padding-bottom:10px}
+.notice{font-size:12px;color:#9ca3af;margin-top:10px}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">JudyBet</div>
+<div class="nav-buttons">
+<button onclick="openLogin()">Login</button>
+<button onclick="openMpesa()">Deposit</button>
+<button onclick="openWithdraw()">Withdraw</button>
+</div>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h2>Wallet</h2>
+<div class="balance">Balance: KES <span id="balance">10000</span></div>
+<p class="notice">Demo platform only. No real money transactions.</p>
+</div>
+
+<h2>Today's Matches</h2>
+
+<div class="card">
+<p><strong>Dynamo Eastmere</strong> vs <strong>Portwell 1975</strong></p>
+<div class="odds">
+<button onclick="placeBet(2.75)">1 (2.75)</button>
+<button onclick="placeBet(3.50)">X (3.50)</button>
+<button onclick="placeBet(2.65)">2 (2.65)</button>
+</div>
+</div>
+
+<div class="card">
+<p><strong>Nairobi City FC</strong> vs <strong>Mombasa Stars</strong></p>
+<div class="odds">
+<button onclick="placeBet(2.10)">1 (2.10)</button>
+<button onclick="placeBet(3.20)">X (3.20)</button>
+<button onclick="placeBet(3.00)">2 (3.00)</button>
+</div>
+</div>
+
+<div class="footer">
+JudyBet Demo © 2026 - Educational Use Only
+</div>
+
+</div>
+
+<!-- Login Modal -->
+<div class="modal" id="loginModal">
+<div class="modal-content">
+<h3>Login</h3>
+<input type="text" placeholder="Username" id="username">
+<input type="password" placeholder="Password" id="password">
+<button onclick="login()">Login</button>
+<button onclick="closeLogin()">Close</button>
+</div>
+</div>
+
+<!-- Deposit Modal -->
+<div class="modal" id="mpesaModal">
+<div class="modal-content">
+<h3>M-Pesa Deposit (Demo)</h3>
+<p style="font-size:13px;color:#9ca3af">Minimum Deposit: KES 3500</p>
+<p style="font-size:12px;color:#9ca3af">Business Till: 3139439 (Demo Display Only)</p>
+<input type="number" placeholder="Enter Amount" id="depositAmount">
+<button onclick="deposit()">Confirm Deposit</button>
+<button onclick="closeMpesa()">Close</button>
+</div>
+</div>
+
+<!-- Withdraw Modal -->
+<div class="modal" id="withdrawModal">
+<div class="modal-content">
+<h3>Withdraw (Demo)</h3>
+<input type="number" placeholder="Enter Amount" id="withdrawAmount">
+<button onclick="withdraw()">Confirm Withdraw</button>
+<button onclick="closeWithdraw()">Close</button>
+</div>
+</div>
+
+<script>
+let loggedIn=false;
+let balance=10000;
+
+function openLogin(){document.getElementById('loginModal').style.display='flex'}
+function closeLogin(){document.getElementById('loginModal').style.display='none'}
+function openMpesa(){if(!loggedIn){alert("Please login first");return;}document.getElementById('mpesaModal').style.display='flex'}
+function closeMpesa(){document.getElementById('mpesaModal').style.display='none'}
+function openWithdraw(){if(!loggedIn){alert("Please login first");return;}document.getElementById('withdrawModal').style.display='flex'}
+function closeWithdraw(){document.getElementById('withdrawModal').style.display='none'}
+
+function login(){
+let user=document.getElementById('username').value;
+let pass=document.getElementById('password').value;
+if(user && pass){loggedIn=true;alert("Login Successful (Demo)");closeLogin();}
+else{alert("Enter login details");}
+}
+
+function deposit(){
+let amount=parseInt(document.getElementById('depositAmount').value);
+if(amount>=3500){balance+=amount;document.getElementById('balance').innerText=balance;alert("Deposit Successful (Demo Only)");closeMpesa();}
+else{alert("Minimum deposit is KES 3500");}
+}
+
+function withdraw(){
+let amount=parseInt(document.getElementById('withdrawAmount').value);
+if(amount>0 && amount<=balance){balance-=amount;document.getElementById('balance').innerText=balance;alert("Withdrawal Processed (Demo Only)");closeWithdraw();}
+else{alert("Invalid withdrawal amount");}
+}
+
+function placeBet(odds){
+if(!loggedIn){alert("Please login first");return;}
+let stake=100;
+if(balance>=stake){balance-=stake;document.getElementById('balance').innerText=balance;alert("Bet placed at odds "+odds+" (KES 100 Demo Stake)");}
+else{alert("Insufficient balance");}
+}
+</script>
+
+</body>
+</html>
